@@ -1,4 +1,5 @@
 from .base import Base
+import re
 import json
 import subprocess
 
@@ -17,18 +18,7 @@ class Source(Base):
         self.matchers = ['matcher_full_fuzzy']
 
     def get_complete_position(self, context):
-        line = self.vim.eval('getline(".")')
-        start = self.vim.eval('col(".")')
-        triggers = ['->', '::']
-        while start > 0:
-            if line[start - 1:start] == '$':
-                return start
-
-            if line[start - 2:start] in triggers:
-                return start
-
-            start -= 1
-        return start
+        return len(re.sub('[\$0-9A-Za-z_]+$', '', context['input']))
 
     def gather_candidates(self, context):
         self._phpactor = self.vim.eval(
