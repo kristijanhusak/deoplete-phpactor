@@ -38,7 +38,7 @@ class Source(Base):
         offset = line_offset + column_offset + len(context['complete_str'])
 
         args = [
-            'php',
+            self.vim.eval('g:phpactorPhpBin'),
             self._phpactor,
             'rpc',
             '--working-dir=%s' % self.vim.eval('getcwd()')
