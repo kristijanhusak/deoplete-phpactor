@@ -63,17 +63,24 @@ class Source(Base):
             return self.print_error(errs)
 
         result = json.loads(result.decode())
+
         result = result['parameters']['value']
 
-        if len(result['issues']) > 0:
-            self.vim.call(
-                'deoplete#util#print_error',
-                ', '.join(result['issues']),
-                'deoplete-phpactor'
-            )
+        if 'issues' in result:
+            if len(result['issues']) > 0:
+                self.vim.call(
+                    'deoplete#util#print_error',
+                    ', '.join(result['issues']),
+                    'deoplete-phpactor'
+                )
 
-        if len(result['suggestions']) > 0:
-            for suggestion in result['suggestions']:
+        if isinstance(result, list):
+            suggestions = result
+        else:
+            suggestions = result['suggestions']
+
+        if len(suggestions) > 0:
+            for suggestion in suggestions:
                 candidates.append({
                     'word': suggestion['name'],
                     'menu': suggestion['info'],
