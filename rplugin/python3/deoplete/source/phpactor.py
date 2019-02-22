@@ -64,6 +64,9 @@ class Source(Base):
 
         result = json.loads(result.decode())
 
+        if 'parameters' not in result or 'value' not in result['parameters']:
+            return candidates
+
         result = result['parameters']['value']
 
         if 'issues' in result:
